@@ -1,10 +1,14 @@
 package com.nowcoder.community;
+import java.util.Date;
 
 import com.nowcoder.community.dao.DiscussPostMapper;
+import com.nowcoder.community.dao.LoginTicketMapper;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.DiscussPost;
+import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.DiscussPostService;
+import com.nowcoder.community.util.CommunityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,8 @@ public class MapperTests {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    LoginTicketMapper loginTicketMapper;
 
     @Test
     public void testSelectUser(){
@@ -52,5 +58,33 @@ public class MapperTests {
             System.out.println(discussPost);
         }
         System.out.println(discussPostMapper.selectDiscussPostRows(132));
+    }
+
+    /**
+     * 添加登录凭证
+     */
+    @Test
+    public void testInsertLogin(){
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setTicket("AAA");
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60 * 10));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+    }
+
+    /**
+     * 登录凭证
+     * 测试 查询 删除功能
+     */
+    @Test
+    public void testLoginTicket(){
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("AAA");
+        System.out.println(loginTicket);
+
+        loginTicketMapper.updateStatus("AAA", 1);
+        LoginTicket loginTicket1 = loginTicketMapper.selectByTicket("AAA");
+        System.out.println(loginTicket1);
     }
 }
