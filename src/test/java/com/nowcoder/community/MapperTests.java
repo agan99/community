@@ -8,6 +8,7 @@ import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.DiscussPostService;
+import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,6 +36,9 @@ public class MapperTests {
 
     @Autowired
     LoginTicketMapper loginTicketMapper;
+
+    @Autowired
+    UserService userService;
 
     @Test
     public void testSelectUser(){
@@ -86,5 +91,16 @@ public class MapperTests {
         loginTicketMapper.updateStatus("AAA", 1);
         LoginTicket loginTicket1 = loginTicketMapper.selectByTicket("AAA");
         System.out.println(loginTicket1);
+    }
+
+    /**
+     * 测试用户更改密码
+     */
+    @Test
+    public void testChangePassword(){
+        User user = userMapper.selectById(154);
+        System.out.println(CommunityUtil.md5("123" + user.getSalt()));
+//        Map<String, Object> map = userService.changePassword(user, "123456", "1234");
+//        System.out.println(map.get("passwordMsg"));
     }
 }
