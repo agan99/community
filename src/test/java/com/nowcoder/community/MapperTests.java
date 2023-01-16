@@ -103,4 +103,17 @@ public class MapperTests {
 //        Map<String, Object> map = userService.changePassword(user, "123456", "1234");
 //        System.out.println(map.get("passwordMsg"));
     }
+
+    /**
+     * 插入新帖子
+     */
+    @Test
+    public void testInsertDiscussPost(){
+        DiscussPost discussPost = new DiscussPost();
+        discussPost.setUserId(154);
+        discussPost.setTitle("111111111");
+        discussPost.setContent("3333333");
+        discussPost.setCreateTime(new Date());
+        discussPostMapper.insertDiscussPost(discussPost);
+    }
 }
