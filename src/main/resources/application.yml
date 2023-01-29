@@ -1,0 +1,60 @@
+# ServerProperties
+server:
+  port: 8080
+  servlet:
+    context-path: /community
+
+# ThymeleafProperties
+spring:
+  thymeleaf:
+    cache: false
+  # DataSourceProperties
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    username: root
+    password: 938765
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+  # MailProperties
+  # 邮箱
+  mail:
+    protocol: smtps
+    host: smtp.163.com
+    port: 465
+    username: xiudui36295@163:com
+    default-encoding: UTF-8
+    properties:
+      mail:
+        debug: true
+        from: xiudui36295@163.com
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+
+# MybatisPlus
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: is_delete # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  mapper-locations: classpath:/mapper/*.xml
+  # 实体扫描
+  type-aliases-package: com.nowcoder.community.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+# logger
+logging:
+  level:
+    com.nowcoder.community: debug
+
+# communtity
+community:
+  path:
+    domain: http://localhost:8080
+    upload: d:/work/data/upload

@@ -1,8 +1,9 @@
 package com.nowcoder.community.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.nowcoder.community.entity.User;
 
-public interface UserMapper {
+public interface UserMapper  extends BaseMapper<User>{
 
     User selectById(int id);
 

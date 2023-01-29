@@ -36,4 +36,19 @@ public interface CommunityConstant {
      * 实体类型: 评论
      */
     int ENTITY_TYPE_COMMENT = 2;
+
+    /**
+     * 私信状态：未读
+     */
+    int MESSAGE_STATUS_Unread = 0;
+
+    /**
+     * 私信状态：未读
+     */
+    int MESSAGE_STATUS_DELETE = 2;
+
+    /**
+     * 系统用户id
+     */
+    int SYSTEM_USERID = 1;
 }

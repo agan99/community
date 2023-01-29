@@ -1,5 +1,7 @@
 package com.nowcoder.community.service;
 
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nowcoder.community.dao.LoginTicketMapper;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.LoginTicket;
@@ -20,7 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class UserService implements CommunityConstant {
+public class UserService  implements CommunityConstant {
 
     @Autowired
     private UserMapper userMapper;
