@@ -1,4 +1,5 @@
 package com.nowcoder.community.service.impl;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,8 +10,11 @@ import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.MessageService;
 import com.nowcoder.community.util.CommunityConstant;
+import com.nowcoder.community.util.CommunityUtil;
+import com.nowcoder.community.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 
@@ -27,6 +31,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
 
     /**
      * 获取当前用户的所有私信
@@ -92,12 +99,16 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         // 2.封装数据
         for (Message message : messages) {
             Map<String, Object> map = new HashMap<>();
+            // 私信id
+            map.put("id", message.getId());
             // 消息
             map.put("content", message.getContent());
             // 私信时间
             map.put("createTime", message.getCreateTime());
             // 会话id
             map.put("conversationId", message.getConversationId());
+            // 消息状态
+            map.put("status", message.getStatus());
             // 消息发送者
             map.put("fromUser", Objects.equals(message.getFromId(), safetyUser1.getId())
                     ? safetyUser1 : safetyUser2);
@@ -120,6 +131,69 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         } else {
             return getSafetyUser(userMapper.selectById(ids[0]));
         }
+    }
+
+    /**
+     * 发送私信
+     * @param toName 接收者
+     * @param content 内容
+     * @return Json提示信息
+     */
+    @Override
+    public String sendLetter(User fromUser, String toName, String content) {
+        // 1.检验数据
+        // 判断是否发送给自己
+        if (fromUser.getUsername().equals(toName)){
+            return CommunityUtil.getJSONString(1, "不能私信给自己!");
+        }
+
+        // 查找是否有目标用户
+        User toUser = userMapper.selectByName(toName);
+        if (toUser == null) {
+            return CommunityUtil.getJSONString(1, "目标用户不存在!");
+        }
+
+        // 2.保存数据
+        // 设置私信表数值
+        Message message = new Message();
+        message.setFromId(fromUser.getId());
+        message.setToId(toUser.getId());
+
+        if (message.getFromId() < message.getToId()) {
+            message.setConversationId(message.getFromId() + "_" + message.getToId());
+        } else {
+            message.setConversationId(message.getToId() + "_" + message.getFromId());
+        }
+
+        // 处理私信内容
+        message.setContent(HtmlUtils.htmlEscape(content));
+        message.setContent(sensitiveFilter.filter(content));
+
+        message.setStatus(0);
+        message.setCreateTime(new Date());
+
+        messageMapper.insert(message);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+
+    @Override
+    public void readMessage(User fromUser, List<Map<String, Object>> letterDetails) {
+        List<Integer> ids = new ArrayList<>();
+
+        if (letterDetails != null) {
+            for (Map<String, Object> detail : letterDetails) {
+                User user = (User) detail.get("fromUser");
+                // 取出接收者私信和私信状态为未读的私信id
+                if (user.getId() != fromUser.getId() && (Integer) detail.get("status") == 0){
+                    ids.add((Integer) detail.get("id"));
+                }
+            }
+        }
+
+        // 修改消息为已读
+        messageMapper.updateStatus(ids, 1);
     }
 
     /**

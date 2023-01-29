@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +71,22 @@ public class MessageController {
         // 来自谁的私信
         model.addAttribute("target", messageService.getLetterTarget(hostHolder.getUser(), conversationId));
 
+        // 设置已读
+        messageService.readMessage(hostHolder.getUser(), letterDetails);
+
         return "/site/letter-detail";
+    }
+
+    /**
+     * 给指定用户发送私信
+     * @param toName 接收者
+     * @param content 私信内容
+     * @return 提示信息
+     */
+    @ResponseBody
+    @PostMapping("/letter/send")
+    public String sendLetter(String toName, String content){
+        return messageService.sendLetter(hostHolder.getUser(), toName, content);
     }
 
 }

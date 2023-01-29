@@ -34,4 +34,12 @@ public interface MessageMapper extends BaseMapper<Message> {
      * @return 消息列表
      */
     List<Message> selectListByConversationId(String conversationId, int offset, int limit);
+
+    /**
+     * 修改消息状态
+     * @param ids
+     * @param status
+     * @return
+     */
+    int updateStatus(List<Integer> ids, int status);
 }

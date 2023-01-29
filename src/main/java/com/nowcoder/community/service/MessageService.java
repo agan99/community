@@ -62,4 +62,18 @@ public interface MessageService extends IService<Message> {
      * @return
      */
     User getLetterTarget(User loginUser, String conversationId);
+
+    /**
+     * 发送私信
+     * @param toName 接收者
+     * @param content 内容
+     * @return Json提示信息
+     */
+    String sendLetter(User fromUser, String toName, String content);
+
+    /**
+     * 设置已读
+     * @param letterDetails
+     */
+    void readMessage(User fromUser, List<Map<String, Object>> letterDetails);
 }

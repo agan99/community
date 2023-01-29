@@ -136,11 +136,11 @@ public class LoginController implements CommunityConstant {
                         Model model, HttpSession session, HttpServletResponse response){
 
         // 检查验证码
-        String  kaptcha = (String) session.getAttribute("kaptcha");
-        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
-            model.addAttribute("codeMsg", "验证码不正确！");
-            return "/site/login";
-        }
+//        String  kaptcha = (String) session.getAttribute("kaptcha");
+//        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
+//            model.addAttribute("codeMsg", "验证码不正确！");
+//            return "/site/login";
+//        }
 
         // 登录
         int expiredSeconds = rememberme ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
