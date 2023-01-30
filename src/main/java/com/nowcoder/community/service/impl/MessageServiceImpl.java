@@ -178,6 +178,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     }
 
 
+    /**
+     * 设置消息为已读
+     * @param fromUser
+     * @param letterDetails
+     */
     @Override
     public void readMessage(User fromUser, List<Map<String, Object>> letterDetails) {
         List<Integer> ids = new ArrayList<>();
@@ -191,9 +196,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
                 }
             }
         }
-
         // 修改消息为已读
-        messageMapper.updateStatus(ids, 1);
+        if (ids != null && !ids.isEmpty()) {
+            messageMapper.updateStatus(ids, 1);
+        }
     }
 
     /**
