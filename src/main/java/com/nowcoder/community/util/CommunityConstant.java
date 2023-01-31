@@ -38,6 +38,11 @@ public interface CommunityConstant {
     int ENTITY_TYPE_COMMENT = 2;
 
     /**
+     * 实体类型: 用户
+     */
+    int ENTITY_TYPE_USER = 3;
+
+    /**
      * 私信状态：未读
      */
     int MESSAGE_STATUS_Unread = 0;
