@@ -33,6 +33,10 @@ spring:
         from: xiudui36295@163.com
         smtp:
           socketFactoryClass: javax.net.ssl.SSLSocketFactory
+  redis:
+    database: 2
+    host: localhost
+    port: 6379
 
 # MybatisPlus
 mybatis-plus:
