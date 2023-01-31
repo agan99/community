@@ -2,6 +2,7 @@ package com.nowcoder.community.controller;
 
 import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.HostHolder;
@@ -43,6 +44,9 @@ public class UserController {
 
     @Value("${community.path.domain}")
     private String domain;
+
+    @Autowired
+    LikeService likeService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -146,5 +150,22 @@ public class UserController {
             model.addAttribute("newPasswordMsg", map.get("newPasswordMsg"));
             return "/site/setting";
         }
+    }
+
+    @GetMapping("/profile/{userId}")
+    public String getProfilePage(@PathVariable("userId") int userId, Model model){
+        // 1.校验数据
+        // 查询数据库是否有该用户
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在！");
+        }
+
+        model.addAttribute("user", user);
+
+        // 2.查询用户获得点赞次数
+        int likeUserCount = likeService.findLikeUserCount(userId);
+        model.addAttribute("likeUserCount", likeUserCount);
+        return "/site/profile";
     }
 }
