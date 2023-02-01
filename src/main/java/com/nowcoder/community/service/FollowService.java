@@ -1,5 +1,10 @@
 package com.nowcoder.community.service;
 
+import com.nowcoder.community.entity.User;
+import com.nowcoder.community.entity.VO.FollowVO;
+
+import java.util.List;
+
 public interface FollowService {
 
     /**
@@ -36,10 +41,32 @@ public interface FollowService {
 
     /**
      * 查询某个用户是否已关注该实体
-     * @param userId
-     * @param entityType
-     * @param entityId
+     * @param userId 用户id
+     * @param entityType 实体类型
+     * @param entityId 实体id
      * @return
      */
     boolean hasFollowed(int userId, int entityType, int entityId);
+
+
+    /**
+     * 分页查询某个用户关注列表
+     * @param loginUser
+     * @param userId 用户id
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<FollowVO> listFollowee(User loginUser, int userId, int offset, int limit);
+
+    /**
+     * 分查询某个用户粉丝列表
+     * @param loginUser
+     * @param userId 用户id
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<FollowVO> listFollower(User loginUser, int userId, int offset, int limit) ;
+
 }
