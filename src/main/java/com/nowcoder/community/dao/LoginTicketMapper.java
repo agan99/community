@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 /**
  * 登录凭证信息表
  */
+@Deprecated
 public interface LoginTicketMapper {
 
     /**

@@ -1,30 +1,34 @@
 package com.nowcoder.community.controller.interceptor;
 
-import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
+import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CookieUtil;
 import com.nowcoder.community.util.HostHolder;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * 自定义登录拦截器
  */
 @Component
-public class LoginTicketInterceptor implements HandlerInterceptor {
+public class LoginTicketInterceptor implements HandlerInterceptor, CommunityConstant {
 
     @Autowired
     UserService userService;
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 在Controller之前执行 请求
@@ -37,18 +41,33 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 1. 从 cookie中获取登录凭证
-        String ticket = CookieUtil.getValue(request, "ticket");
+//        // 1. 从 cookie中获取登录凭证
+        String token = CookieUtil.getValue(request, "token");
+//
+//        // 2. 判断凭证是否有效
+//        if (ticket != null) {
+//            LoginTicket loginTicket = userService.findLoginTicket(ticket);
+//            if (loginTicket != null && (loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date()))) {
+//                User userById = userService.findUserById(loginTicket.getUserId());
+//                // 3. 持有本次用户凭证
+//                hostHolder.setUser(userById);
+//            }
+//        }
 
-        // 2. 判断凭证是否有效
-        if (ticket != null) {
-            LoginTicket loginTicket = userService.findLoginTicket(ticket);
-            if (loginTicket != null && (loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date()))) {
-                User userById = userService.findUserById(loginTicket.getUserId());
-                // 3. 持有本次用户凭证
-                hostHolder.setUser(userById);
+        // 取出 token
+//        String token = request.getHeader("token");
+        // 查询 数据库是否有 token
+        if (token != null){
+            Integer userId = (Integer) redisTemplate.opsForValue().get(token);
+            if (userId != null) {
+//                redisTemplate.expire(token, DEFAULT_EXPIRED_SECONDS, TimeUnit.SECONDS);
+                User user = userService.findUserById(userId);
+                hostHolder.setUser(user);
             }
         }
+
+//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
         return true;
     }
 

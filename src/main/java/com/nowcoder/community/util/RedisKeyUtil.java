@@ -7,6 +7,10 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER_LIKE = "like:user";
     private static final String PREFIX_FOLLOWER = "follower";
     private static final String PREFIX_FOLLOWEE = "followee";
+    private static final String PREFIX_KAPTCHA = "kaptcha";
+    private static final String PREFIX_TICKET = "ticket";
+    private static final String PREFIX_USER = "user";
+    private static final String PREFIX_USER_TOKEN = "user-token";
 
 
     /**
@@ -50,5 +54,40 @@ public class RedisKeyUtil {
      */
     public static String getFolloweeKey(int userId, int entityType){
         return PREFIX_FOLLOWEE + SPLIT + userId + SPLIT + entityType;
+    }
+
+    /**
+     * kaptcha:uuid → 验证码
+     * @param uuid
+     * @return
+     */
+    public static String getKapthaKey(String uuid){
+        return PREFIX_KAPTCHA + SPLIT + uuid;
+    }
+
+    /**
+     * ticket:ticket → LoginTicket
+     * @param ticket
+     * @return
+     */
+    public static String getTicketKey(String ticket){
+        return PREFIX_TICKET + SPLIT + ticket;
+    }
+
+    /**
+     * user-token:token → (userId)
+     * @param token
+     * @return
+     */
+    public static String getUserTokenKey(String token){
+        return PREFIX_USER_TOKEN + SPLIT + token;
+    }
+    /**
+     * user:userid → user
+     * @param userId
+     * @return
+     */
+    public static String getUserKey(int userId){
+        return PREFIX_USER + SPLIT + userId;
     }
 }
